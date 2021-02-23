@@ -1,17 +1,22 @@
 @inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
     <div class="main">
-        <div class="top-row px-4">
-
-        </div>
-
+        
         <div class="content px-4">
-            @Body
+            <h1>Vecka: @currentWeek</h1>
         </div>
     </div>
 </div>
+
+
+
+@code {
+    private int currentWeek = 0;
+
+    protected override void OnInitialized()
+    {
+       var cc = CultureInfo.CreateSpecificCulture("sv-SE");
+       currentWeek = cc.Calendar.GetWeekOfYear(DateTime.Now, cc.DateTimeFormat.CalendarWeekRule, cc.DateTimeFormat.FirstDayOfWeek);
+    }
+}
