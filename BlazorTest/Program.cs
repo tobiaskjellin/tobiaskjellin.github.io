@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,8 +7,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Net.Sockets;
-
+using System.Timers;
 namespace BlazorTest
 {
     public class Program
@@ -20,6 +18,7 @@ namespace BlazorTest
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped(sp => new Timer { Interval = 1000 });
 
             await builder.Build().RunAsync();
         }
