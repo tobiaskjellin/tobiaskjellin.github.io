@@ -1,6 +1,6 @@
 {
-  "name": "Xaml Editor",
-  "short_name": "Xaml",
+  "name": "BlazorTest",
+  "short_name": "BlazorTest",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
