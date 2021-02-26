@@ -1,23 +1,19 @@
 @page "/counter"
 @inject Timer Timer
-<h1>Beer session</h1>
+<h1>Beer</h1>
 
-<p>Time left: @_time.ToString(@"hh\:mm\:ss")</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<p>Krogen stänger om: @_time.ToString(@"hh\:mm\:ss")</p>
+
+
 
 @code {
     private DateTime _date;
     protected TimeSpan _time;
 
-    private void IncrementCount()
-    {
-       // currentCount++;     
-    }
-
     protected override void OnInitialized()
     {
-        _date = new DateTime(2021, 02, 26, 17, 0, 0);
+        _date = new DateTime(2021, 02, 26, 20, 0, 0);
         _time = _date - DateTime.Now;
         Timer.Elapsed += OnTimedEvent;
         Timer.Start();
