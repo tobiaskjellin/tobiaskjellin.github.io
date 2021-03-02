@@ -2,8 +2,6 @@
 
 <h1>Json Viewer!</h1>
 
-Welcome to your new app.
-
 <p>
     <InputFile OnChange="@OnInputFileChange"  />
 </p>
@@ -19,6 +17,21 @@ Welcome to your new app.
         IBrowserFile imgFile = e.File;
         var buffers = new byte[imgFile.Size];
         await imgFile.OpenReadStream().ReadAsync(buffers);
-        _content = Encoding.UTF8.GetString(buffers);
+        string bla = Encoding.UTF8.GetString(buffers);
+        Console.WriteLine("new ifle");
+
+        var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            };
+
+        JsonDocument docu = JsonSerializer.Deserialize<JsonDocument>(bla, options);
+        _content = docu.RootElement.ToString();
     }
+
+     void ButtonClicked()
+  {
+    _content = "dsds";
+    Console.WriteLine("new clickck");
+  }
 }
