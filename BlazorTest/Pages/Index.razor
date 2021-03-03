@@ -3,17 +3,17 @@
 <h1>Json Viewer!</h1>
 
 <p>
-    <InputFile OnChange="@OnInputFileChange" style="background-color: aliceblue;"  />
+    <InputFile OnChange="@OnInputFileChange" style="background-color: aliceblue;" />
 </p>
 
-     <div class="card" style="width:30rem;">
-        <div class="card-body">
-            @foreach (var imageDataUrl in orders)
-            {
-                <p>@imageDataUrl</p>
-            }
-        </div>
+<div class="card" style="width:30rem;">
+    <div class="card-body">
+        @foreach (var imageDataUrl in orders)
+        {
+            <p>@imageDataUrl</p>
+        }
     </div>
+</div>
 <p>@_content</p>
 
 
@@ -29,21 +29,29 @@
         string bla = Encoding.UTF8.GetString(buffers);
         Console.WriteLine("new ifle");
 
-        string str = "";
         //JsonDocument docu = JsonDocument.Parse(bla);
         using (JsonDocument doc = JsonDocument.Parse(bla))
         {
             JsonElement root = doc.RootElement;
 
-            var enumi = root.EnumerateObject();
+            var enumi = root.EnumerateObject().ToList();
             foreach (var item in enumi)
             {
-                orders.Add(item.ToString());
-             //   str += item.ToString() + "<br>";
+                JsonElement ele = item.Value;
+                if(ele.ValueKind is JsonValueKind.Array)
+                {
+
+                }
+                else if(ele.ValueKind is JsonValueKind.Object)
+                {
+
+                }
+                orders.Add(ele.ValueKind + " - " + item.ToString());
+                // str += item.ToString() + "<br>";
             }
         }
 
-        _content = str;
+        _content = bla;
     }
 
     void ButtonClicked()
