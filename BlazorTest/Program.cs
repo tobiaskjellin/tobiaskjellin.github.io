@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Timers;
+using System.Text.Json;
+
 namespace BlazorTest
 {
     public class Program

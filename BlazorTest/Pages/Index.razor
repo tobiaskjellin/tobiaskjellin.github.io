@@ -3,14 +3,23 @@
 <h1>Json Viewer!</h1>
 
 <p>
-    <InputFile OnChange="@OnInputFileChange"  />
+    <InputFile OnChange="@OnInputFileChange" style="background-color: aliceblue;"  />
 </p>
 
+     <div class="card" style="width:30rem;">
+        <div class="card-body">
+            @foreach (var imageDataUrl in orders)
+            {
+                <p>@imageDataUrl</p>
+            }
+        </div>
+    </div>
 <p>@_content</p>
 
 
 @code {
     private string _content = "";
+    List<string> orders = new List<string>();
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
@@ -20,18 +29,26 @@
         string bla = Encoding.UTF8.GetString(buffers);
         Console.WriteLine("new ifle");
 
-        var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-            };
+        string str = "";
+        //JsonDocument docu = JsonDocument.Parse(bla);
+        using (JsonDocument doc = JsonDocument.Parse(bla))
+        {
+            JsonElement root = doc.RootElement;
 
-        JsonDocument docu = JsonSerializer.Deserialize<JsonDocument>(bla, options);
-        _content = docu.RootElement.ToString();
+            var enumi = root.EnumerateObject();
+            foreach (var item in enumi)
+            {
+                orders.Add(item.ToString());
+             //   str += item.ToString() + "<br>";
+            }
+        }
+
+        _content = str;
     }
 
-     void ButtonClicked()
-  {
-    _content = "dsds";
-    Console.WriteLine("new clickck");
-  }
+    void ButtonClicked()
+    {
+        _content = "dsds";
+        Console.WriteLine("new clickck");
+    }
 }
