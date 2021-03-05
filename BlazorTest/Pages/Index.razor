@@ -4,81 +4,117 @@
 
 <p>
     <InputFile OnChange="@OnInputFileChange" />
+    <button class="btn btn-primary" @onclick="OnGenerateClasses">Generate C# classes</button>
 </p>
 
 <RadzenTree Data=@JsonList Style="width: 100%; height: 100%">
-    <RadzenTreeLevel TextProperty="Name" ChildrenProperty="Children" HasChildren=@(e => (e as JsonTest).Children.Count > 0) />
+    <RadzenTreeLevel TextProperty="Bla" ChildrenProperty="Children" HasChildren=@(e => (e as JsonObject).Children.Count
+        > 0) />
 </RadzenTree>
 
 
+<p>@classes</p>
 
 @code {
-    List<JsonTest> JsonList = new List<JsonTest>();
-
+    List<JsonObject> JsonList = new List<JsonObject>();
+    string classes = "";
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
-        IBrowserFile imgFile = e.File;
-        var buffers = new byte[imgFile.Size];
-        await imgFile.OpenReadStream().ReadAsync(buffers);
-        string bla = Encoding.UTF8.GetString(buffers);
+        IBrowserFile jsonFile = e.File;
+        var buffers = new byte[jsonFile.Size];
+        await jsonFile.OpenReadStream().ReadAsync(buffers);
+        string fileContent = Encoding.UTF8.GetString(buffers);
 
-        using (JsonDocument doc = JsonDocument.Parse(bla))
+        using (JsonDocument doc = JsonDocument.Parse(fileContent))
         {
-            Recursive(null, doc.RootElement, "Root");
+            IterateJsonDocument(null, doc.RootElement, "Root");
         }
     }
 
-    private void Recursive(JsonTest parent, JsonElement element, string name)
+    private void IterateJsonDocument(JsonObject parent, JsonElement element, string name)
     {
         if (element.ValueKind is JsonValueKind.Object)
         {
-            var newObject = new JsonTest(name +  " <" + element.ValueKind + ">", element.Clone());
+            var jsonObject = new JsonObject(name, string.Empty, element.ValueKind);
             if (parent != null)
-                parent.Children.Add(newObject);
+                parent.Children.Add(jsonObject);
 
-            parent = newObject;
+            parent = jsonObject;
 
             if (JsonList.Count == 0)
             {
                 JsonList.Add(parent);
             }
 
-            var array = element.EnumerateObject();
-            foreach (var item in array)
+            var objProperties = element.EnumerateObject();
+            foreach (var property in objProperties)
             {
-                Recursive(parent, item.Value, item.Name);
+                IterateJsonDocument(parent, property.Value, property.Name);
             }
         }
         else if (element.ValueKind is JsonValueKind.Array)
         {
-            var newparent = new JsonTest(name +  " <" + element.ValueKind + ">", element.Clone());
-            parent.Children.Add(newparent);
-            parent = newparent;
+            var jsonObject = new JsonObject(name, string.Empty, element.ValueKind);
+            parent.Children.Add(jsonObject);
+            parent = jsonObject;
 
-            var array = element.EnumerateArray();
-            foreach (var item in array)
+            var elementArray = element.EnumerateArray();
+            foreach (var item in elementArray)
             {
-                Recursive(parent, item, parent.Children.Count.ToString());
+                IterateJsonDocument(parent, item, parent.Children.Count.ToString());
             }
         }
         else
         {
-            parent.Children.Add(new JsonTest(name + " : " + element.ToString() + " <" + element.ValueKind + ">", element.Clone()));
+            parent.Children.Add(new JsonObject(name, element.ToString(), element.ValueKind));
         }
     }
 
-    public class JsonTest
+    private void OnGenerateClasses()
+    {
+        if (JsonList.Count > 0)
+        {
+            JsonObject root = JsonList[0];
+            PrintClasses(root);
+        }
+        else
+        {
+            classes = "Add JSON first";
+        }
+    }
+
+    private void PrintClasses(JsonObject root)
+    {
+        if (root.ValueKind == JsonValueKind.Object)
+        {
+            classes += root.Bla;
+        }
+        foreach (var item in root.Children)
+        {
+            if(root.ValueKind == JsonValueKind.Array)
+            {
+                
+            }
+            PrintClasses(item);
+        }
+    }
+
+
+    public class JsonObject
     {
         public string Name { get; set; }
-        public List<JsonTest> Children { get; set; }
-        public JsonElement Json { get; set; }
+        public string Value { get; set; }
+        public string Bla { get { return string.Format("{0} : {1} <{2}>", Name, Value, ValueKind.ToString()); } }
+        public JsonValueKind ValueKind { get; set; }
+        public List<JsonObject> Children { get; set; }
 
-        public JsonTest(string name, JsonElement json)
+        public JsonObject(string name, string value, JsonValueKind valueKind)
         {
             Name = name;
-            Children = new List<JsonTest>();
-            Json = json;
+            Value = value;
+            ValueKind = valueKind;
+            Children = new List<JsonObject>();
         }
     }
 }
