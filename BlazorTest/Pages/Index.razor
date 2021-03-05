@@ -3,30 +3,18 @@
 <h1>Json Viewer!</h1>
 
 <p>
-    <InputFile OnChange="@OnInputFileChange" style="background-color: aliceblue;" />
+    <InputFile OnChange="@OnInputFileChange" />
 </p>
 
-<div class="card" style="width:30rem;">
-    <div class="card-body">
-        @foreach (var imageDataUrl in orders)
-        {
-            <p>@imageDataUrl</p>
-        }
-    </div>
-</div>
-<RadzenTree Data=@JsonList Style="width: 100%; height: 300px">
-    <RadzenTreeLevel TextProperty="Name" ChildrenProperty="Children" HasChildren=@(e => (e as JsonTest).HasChildren) />
+<RadzenTree Data=@JsonList Style="width: 100%; height: 100%">
+    <RadzenTreeLevel TextProperty="Name" ChildrenProperty="Children" HasChildren=@(e => (e as JsonTest).Children.Count > 0) />
 </RadzenTree>
 
-<p>@_content</p>
 
 
 @code {
-    private string _content = "";
-    List<string> orders = new List<string>();
     List<JsonTest> JsonList = new List<JsonTest>();
 
-    JsonTest RootObject;
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
@@ -37,48 +25,26 @@
 
         using (JsonDocument doc = JsonDocument.Parse(bla))
         {
-            RootObject = new JsonTest("Root", doc.RootElement);
-            Recursive(RootObject, doc.RootElement, "Root");
+            Recursive(null, doc.RootElement, "Root");
         }
-        JsonList.Add(RootObject);
-
-        foreach (var item in JsonList)
-        {
-            orders.Add(item.Name + " " + item.Children.Count);
-            foreach (var item2 in item.Children)
-            {
-                orders.Add("--" + item2.Name);
-                foreach (var item3 in item2.Children)
-                {
-                    orders.Add("----" + item3.Name);
-                    foreach (var item4 in item3.Children)
-                    {
-                        orders.Add("------" + item4.Name);
-                        foreach (var item5 in item4.Children)
-                        {
-                            orders.Add("--------" + item5.Name);
-                        }
-                    }
-                }
-            }
-        }
-
-        _content = bla;
     }
 
     private void Recursive(JsonTest parent, JsonElement element, string name)
     {
         if (element.ValueKind is JsonValueKind.Object)
         {
-            Console.WriteLine(parent.Name);
-            if (parent != RootObject)
+            var newObject = new JsonTest(name +  " <" + element.ValueKind + ">", element.Clone());
+            if (parent != null)
+                parent.Children.Add(newObject);
+
+            parent = newObject;
+
+            if (JsonList.Count == 0)
             {
-                var newparent = new JsonTest(name, element.Clone());
-                parent.Children.Add(newparent);
-                parent = newparent;
+                JsonList.Add(parent);
             }
+
             var array = element.EnumerateObject();
-            // JsonList.Add(parent);
             foreach (var item in array)
             {
                 Recursive(parent, item.Value, item.Name);
@@ -86,21 +52,19 @@
         }
         else if (element.ValueKind is JsonValueKind.Array)
         {
-            var newparent = new JsonTest(name, element.Clone());
+            var newparent = new JsonTest(name +  " <" + element.ValueKind + ">", element.Clone());
             parent.Children.Add(newparent);
             parent = newparent;
+
             var array = element.EnumerateArray();
-            //JsonList.Add(parent);
             foreach (var item in array)
             {
-                Recursive(parent, item, "Array");
+                Recursive(parent, item, parent.Children.Count.ToString());
             }
         }
         else
         {
-            // orders.Add(parent.Name+ ": " +name + " : " + element.ToString() + " : " + element.ValueKind);
-            parent.Children.Add(new JsonTest(name, element.Clone()));
-            //Recursive(parent, element, name);
+            parent.Children.Add(new JsonTest(name + " : " + element.ToString() + " <" + element.ValueKind + ">", element.Clone()));
         }
     }
 
@@ -109,22 +73,12 @@
         public string Name { get; set; }
         public List<JsonTest> Children { get; set; }
         public JsonElement Json { get; set; }
-        public bool HasChildren { get; set; }
 
         public JsonTest(string name, JsonElement json)
         {
             Name = name;
             Children = new List<JsonTest>();
             Json = json;
-            HasChildren = json.ValueKind == JsonValueKind.Array;
         }
     }
-
-    void ButtonClicked()
-    {
-        _content = "dsds";
-        Console.WriteLine("new clickck");
-    }
-
-
 }
