@@ -1,13 +1,16 @@
 ﻿@page "/"
-@using MudBlazor
 
+<MudText Typo="Typo.h5">Json Viewer</MudText>
 
-<h1>Json Viewer!</h1>
+<InputFile id="fileInput" OnChange="@OnInputFileChanged" hidden multiple />
 
-<p>
-    <InputFile OnChange="@OnInputFileChange" />
-    <button class="btn btn-primary" @onclick="OnGenerateClasses">Generate C# classes</button>
-</p>
+<MudButton HtmlTag="label"
+           Variant="Variant.Filled"
+           Color="Color.Primary"
+           StartIcon="@Icons.Filled.UploadFile"
+           for="fileInput">
+    Select Json
+</MudButton>
 
 <MudTreeView Items="@JsonList" MaxHeight="100%" Width="100%">
     <ItemTemplate>
@@ -21,14 +24,13 @@
     </ItemTemplate>
 </MudTreeView>
 
-<p>@classes</p>
-
 @code {
     HashSet<JsonObject> JsonList = new HashSet<JsonObject>();
-    string classes = "";
 
-    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
     {
+        JsonList.Clear();
+        
         IBrowserFile jsonFile = e.File;
         var buffers = new byte[jsonFile.Size];
         await jsonFile.OpenReadStream().ReadAsync(buffers);
@@ -78,37 +80,6 @@
             parent.Children.Add(new JsonObject(name, element.ToString(), element.ValueKind));
         }
     }
-
-    private void OnGenerateClasses()
-    {
-        if (JsonList.Count > 0)
-        {
-            //JsonObject root = JsonList[0];
-            //PrintClasses(root);
-        }
-        else
-        {
-            classes = "Add JSON first";
-        }
-    }
-
-    private void PrintClasses(JsonObject root)
-    {
-        if (root.ValueKind == JsonValueKind.Object)
-        {
-            classes += root.Bla;
-        }
-        foreach (var item in root.Children)
-        {
-            if(root.ValueKind == JsonValueKind.Array)
-            {
-
-            }
-            PrintClasses(item);
-        }
-    }
-
-
     public class JsonObject
     {
         public bool IsExpanded { get; set; } = true;

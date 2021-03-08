@@ -1,27 +1,28 @@
 @page "/counter"
-@inject Timer Timer
-<h1>Beer</h1>
 
+<MudText Typo="Typo.h5">Json Report</MudText>
 
-<p>Krogen stänger om: @_time.ToString(@"hh\:mm\:ss")</p>
-
-
+<MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh>Nr</MudTh>
+        <MudTh>Sign</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Position</MudTh>
+        <MudTh>Molar mass</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.Name</MudTd>
+        <MudTd DataLabel="Sign">@context.Value</MudTd>
+        <MudTd DataLabel="Name">@context.HasChild</MudTd>
+    </RowTemplate>
+</MudTable>
 
 @code {
-    private DateTime _date;
-    protected TimeSpan _time;
+  private bool _hidePosition;
+    private IEnumerable<Index.JsonObject> Elements = new List<Index.JsonObject>();
 
     protected override void OnInitialized()
     {
-        _date = new DateTime(2021, 02, 26, 20, 0, 0);
-        _time = _date - DateTime.Now;
-        Timer.Elapsed += OnTimedEvent;
-        Timer.Start();
-    }
-
-    private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-    {
-        _time = _date - DateTime.Now;
-        InvokeAsync(StateHasChanged);
+        Elements = new List<Index.JsonObject>(); //await httpClient.GetFromJsonAsync<List<Element>>("webapi/periodictable");
     }
 }

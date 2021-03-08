@@ -1,35 +1,10 @@
 ﻿@page "/fetchdata"
-@inject HttpClient Http
 
-<h1>Krilles API</h1>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Get Krilles Data</button>
-<p><em>@_result</em></p>
+<MudText Typo="Typo.h5">API</MudText>
+<MudText Typo="Typo.body1"><i>Coming soon...</i></MudText>
 
 @code {
-    private string _result = "";
-
-    private void IncrementCount()
+    protected override void OnInitialized()
     {
-        _result = "No data available";
-       // using (HttpResponseMessage response = await Http.GetAsync("http://www.google.se/"))
-      //  {
-          //  _result = response.Content.ToString();
-        //    using (HttpContent content = response.Content)
-      //      {
-                // ... Read the string.
-    //            string result = await content.ReadAsStringAsync();
-
-    //            // ... Display the result.
-    //         if (result != null && result.Length >= 50)
-      //          {
-      //              _result = result.Substring(0, 50) + "...";
-      //          }
-      //          else
-      //          {
-      //              _result = "Error";
-      //          }
-     //       }
-     //   }
     }
 }
