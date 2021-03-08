@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using MudBlazor
+
 
 <h1>Json Viewer!</h1>
 
@@ -7,16 +9,22 @@
     <button class="btn btn-primary" @onclick="OnGenerateClasses">Generate C# classes</button>
 </p>
 
-<RadzenTree Data=@JsonList Style="width: 100%; height: 100%">
-    <RadzenTreeLevel TextProperty="Bla" ChildrenProperty="Children" HasChildren=@(e => (e as JsonObject).Children.Count
-        > 0) />
-</RadzenTree>
-
+<MudTreeView Items="@JsonList" MaxHeight="100%" Width="100%">
+    <ItemTemplate>
+        <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.Children">
+            <Content>
+                <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
+                @*<MudIcon Icon="@context.Icon" Class="ml-0 mr-2" Color="@Color.Default" />*@
+                <MudText>@context.Bla</MudText>
+            </Content>
+        </MudTreeViewItem>
+    </ItemTemplate>
+</MudTreeView>
 
 <p>@classes</p>
 
 @code {
-    List<JsonObject> JsonList = new List<JsonObject>();
+    HashSet<JsonObject> JsonList = new HashSet<JsonObject>();
     string classes = "";
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
@@ -75,8 +83,8 @@
     {
         if (JsonList.Count > 0)
         {
-            JsonObject root = JsonList[0];
-            PrintClasses(root);
+            //JsonObject root = JsonList[0];
+            //PrintClasses(root);
         }
         else
         {
@@ -94,7 +102,7 @@
         {
             if(root.ValueKind == JsonValueKind.Array)
             {
-                
+
             }
             PrintClasses(item);
         }
@@ -103,18 +111,20 @@
 
     public class JsonObject
     {
+        public bool IsExpanded { get; set; } = true;
         public string Name { get; set; }
         public string Value { get; set; }
         public string Bla { get { return string.Format("{0} : {1} <{2}>", Name, Value, ValueKind.ToString()); } }
         public JsonValueKind ValueKind { get; set; }
-        public List<JsonObject> Children { get; set; }
+        public HashSet<JsonObject> Children { get; set; }
+        public bool HasChild{ get{return Children.Count > 0;} }
 
         public JsonObject(string name, string value, JsonValueKind valueKind)
         {
             Name = name;
             Value = value;
             ValueKind = valueKind;
-            Children = new List<JsonObject>();
+            Children = new HashSet<JsonObject>();
         }
     }
 }

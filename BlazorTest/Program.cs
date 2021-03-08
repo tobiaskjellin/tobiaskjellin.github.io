@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Timers;
 using System.Text.Json;
+using MudBlazor.Services;
 
 namespace BlazorTest
 {
@@ -21,7 +22,8 @@ namespace BlazorTest
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped(sp => new Timer { Interval = 1000 });
-
+            builder.Services.AddMudServices();
+            
             await builder.Build().RunAsync();
         }
     }
