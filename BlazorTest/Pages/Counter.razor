@@ -1,28 +1,27 @@
 @page "/counter"
+@inject AppState AppState
+@implements IDisposable
 
 <MudText Typo="Typo.h5">Json Report</MudText>
 
-<MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm">
-    <HeaderContent>
-        <MudTh>Nr</MudTh>
-        <MudTh>Sign</MudTh>
-        <MudTh>Name</MudTh>
-        <MudTh>Position</MudTh>
-        <MudTh>Molar mass</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nr">@context.Name</MudTd>
-        <MudTd DataLabel="Sign">@context.Value</MudTd>
-        <MudTd DataLabel="Name">@context.HasChild</MudTd>
-    </RowTemplate>
-</MudTable>
+@if (AppState.JsonObjects.Count == 0)
+{
+    <p>Upload a Json</p>
+}
+else
+{
+    <MudText Typo="Typo.body1">Number of Json @AppState.JsonObjects.Count</MudText>
+}
+
 
 @code {
-  private bool _hidePosition;
-    private IEnumerable<Index.JsonObject> Elements = new List<Index.JsonObject>();
-
     protected override void OnInitialized()
     {
-        Elements = new List<Index.JsonObject>(); //await httpClient.GetFromJsonAsync<List<Element>>("webapi/periodictable");
+        AppState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
     }
 }

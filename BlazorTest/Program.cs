@@ -21,7 +21,7 @@ namespace BlazorTest
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddScoped(sp => new Timer { Interval = 1000 });
+            builder.Services.AddSingleton<AppState>();
             builder.Services.AddMudServices();
             
             await builder.Build().RunAsync();

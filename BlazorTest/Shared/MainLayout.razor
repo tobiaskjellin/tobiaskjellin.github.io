@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+@inject AppState AppState
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -8,15 +9,20 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
             OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Blazor Test</MudText>
+        <MudText Typo="Typo.h5" Class="ml-3">Json Viewer</MudText>
         <MudAppBarSpacer />
+        <InputFile id="fileInput" OnChange="@OnInputFileChanged" hidden multiple />
+
+        <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Filled.UploadFile"
+            for="fileInput">
+            Select Json
+        </MudButton>
         <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <MudNavMenu>
             <MudNavLink Href="/">Json Viewer</MudNavLink>
             <MudNavLink Href="/counter">Json Report</MudNavLink>
-            <MudNavLink Href="/fetchdata">API</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent>
@@ -27,10 +33,27 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    private bool _drawerOpen = true;
 
-    void DrawerToggle()
+    private void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        IBrowserFile jsonFile = e.File;
+        var buffers = new byte[jsonFile.Size];
+        await jsonFile.OpenReadStream().ReadAsync(buffers);
+        string fileContent = Encoding.UTF8.GetString(buffers);
+
+        HashSet<JsonObject> JsonList = new HashSet<JsonObject>();
+
+        using (JsonDocument doc = JsonDocument.Parse(fileContent))
+        {
+            JsonObject.IterateJsonDocument(JsonList, null, doc.RootElement, "Root");
+        }
+
+        AppState.SetProperty(JsonList);
     }
 }
