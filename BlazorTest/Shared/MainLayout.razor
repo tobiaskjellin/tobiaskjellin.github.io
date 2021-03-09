@@ -1,28 +1,26 @@
 @inherits LayoutComponentBase
 @inject AppState AppState
 
-<MudThemeProvider />
+<MudThemeProvider Theme="_currentTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1">
+    <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
             OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Json Viewer</MudText>
+        <MudText Typo="Typo.h5" Class="ml-3">Blazor etc</MudText>
         <MudAppBarSpacer />
-        <InputFile id="fileInput" OnChange="@OnInputFileChanged" hidden multiple />
+        <MudTooltip Text="Toggle Light/Dark Theme">
+            <MudToggleIconButton Icon="@Icons.Material.Filled.Brightness2" ToggledChanged="OnThemeChanged"
+                 ToggledIcon="@Icons.Material.Outlined.WbSunny" />
+        </MudTooltip>
 
-        <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Filled.UploadFile"
-            for="fileInput">
-            Select Json
-        </MudButton>
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
         <MudNavMenu>
-            <MudNavLink Href="/">Json Viewer</MudNavLink>
-            <MudNavLink Href="/counter">Json Report</MudNavLink>
+            <MudNavLink Typo="Typo.h5" Icon="@Icons.Outlined.Pageview" Match="NavLinkMatch.All" Href="/">Json Viewer</MudNavLink>
+            <MudNavLink Icon="@Icons.Outlined.TextSnippet" Match="NavLinkMatch.Prefix" Href="/counter">Text Editor</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent>
@@ -34,26 +32,47 @@
 
 @code {
     private bool _drawerOpen = true;
+    private MudTheme _currentTheme;
+    private MudTheme defaultTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#272c34"
+        }
+    };
+    private MudTheme darkTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#27272f",
+            Background = "#32333d",
+            BackgroundGrey = "#27272f",
+            Surface = "#373740",
+            DrawerBackground = "#27272f",
+            DrawerText = "rgba(255,255,255, 0.50)",
+            DrawerIcon = "rgba(255,255,255, 0.50)",
+            AppbarBackground = "#27272f",
+            AppbarText = "rgba(255,255,255, 0.70)",
+            TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)"
+        }
+    };
+
+    protected override void OnInitialized()
+    {
+        _currentTheme = defaultTheme;
+    }
 
     private void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
 
-    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    private void OnThemeChanged()
     {
-        IBrowserFile jsonFile = e.File;
-        var buffers = new byte[jsonFile.Size];
-        await jsonFile.OpenReadStream().ReadAsync(buffers);
-        string fileContent = Encoding.UTF8.GetString(buffers);
-
-        HashSet<JsonObject> JsonList = new HashSet<JsonObject>();
-
-        using (JsonDocument doc = JsonDocument.Parse(fileContent))
-        {
-            JsonObject.IterateJsonDocument(JsonList, null, doc.RootElement, "Root");
-        }
-
-        AppState.SetProperty(JsonList);
+        _currentTheme = (_currentTheme == darkTheme ? defaultTheme : darkTheme);
     }
 }

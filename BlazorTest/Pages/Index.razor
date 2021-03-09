@@ -1,26 +1,42 @@
 ﻿@page "/"
 @inject AppState AppState
 @implements IDisposable
+<style>
+    .drag-drop-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .4s;
+        height: 200px;
+    }
 
+    .drag-drop-input {
+        position: absolute;
+        width: 100%;
+        height: 200px;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+</style>
 <MudText Typo="Typo.h5">Json Viewer</MudText>
+<MudPaper Outlined="true" Height="200px" @ondragenter="@(()=>_dragEnterStyle="drag-enter")" @ondragleave="@(()=>_dragEnterStyle=null)"
+    @ondragend="@(()=>_dragEnterStyle=null)" Class=@("drag-drop-zone "+ _dragEnterStyle)>
+    <MudText Typo="Typo.body1">Drag and drop files here or click</MudText>
+    <InputFile OnChange="OnInputFileChanged" class="drag-drop-input" />
+</MudPaper>
 
-@if (AppState.JsonObjects.Count == 0)
-{
-    <p>Upload a Json</p>
-}
-else
-{
-    <MudTreeView Items="@AppState.JsonObjects" MaxHeight="100%" Width="100%">
-        <ItemTemplate>
-            <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.Children">
-                <Content>
-                    <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
-                    <MudText>@context.Bla</MudText>
-                </Content>
-            </MudTreeViewItem>
-        </ItemTemplate>
-    </MudTreeView>
-}
+<MudTreeView Items="@AppState.JsonObjects" MaxHeight="100%" Width="100%">
+    <ItemTemplate>
+        <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.Children">
+            <Content>
+                <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
+                <MudText>@context.Bla</MudText>
+            </Content>
+        </MudTreeViewItem>
+    </ItemTemplate>
+</MudTreeView>
 
 @code {
     protected override void OnInitialized()
@@ -31,5 +47,23 @@ else
     public void Dispose()
     {
         AppState.OnChange -= StateHasChanged;
+    }
+
+    string _dragEnterStyle;
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        IBrowserFile jsonFile = e.File;
+        var buffers = new byte[jsonFile.Size];
+        await jsonFile.OpenReadStream().ReadAsync(buffers);
+        string fileContent = Encoding.UTF8.GetString(buffers);
+
+        HashSet<JsonObject> JsonList = new HashSet<JsonObject>();
+
+        using (JsonDocument doc = JsonDocument.Parse(fileContent))
+        {
+            JsonObject.IterateJsonDocument(JsonList, null, doc.RootElement, jsonFile.Name);
+        }
+
+        AppState.SetProperty(JsonList);
     }
 }

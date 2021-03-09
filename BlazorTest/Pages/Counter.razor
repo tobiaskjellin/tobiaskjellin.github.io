@@ -2,17 +2,10 @@
 @inject AppState AppState
 @implements IDisposable
 
-<MudText Typo="Typo.h5">Json Report</MudText>
-
-@if (AppState.JsonObjects.Count == 0)
-{
-    <p>Upload a Json</p>
-}
-else
-{
-    <MudText Typo="Typo.body1">Number of Json @AppState.JsonObjects.Count</MudText>
-}
-
+<MudText Typo="Typo.h5">Text Editor</MudText>
+<MudItem xs="12" sm="12" md="12">
+    <MudTextField T="string" Variant="Variant.Text" Text="" Lines="30" />
+</MudItem>
 
 @code {
     protected override void OnInitialized()
