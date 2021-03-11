@@ -2,28 +2,16 @@
 @inject AppState AppState
 @implements IDisposable
 
-@* <MudText Typo="Typo.h5">File Manipulation</MudText>
-<MudItem xs="12" sm="12" md="12">
-    <MudTextField Label="Original" T="string" Variant="Variant.Text" Text="@AppState.FileContent" Lines="30" ReadOnly="true" />
-</MudItem>
-<MudItem xs="12" sm="12" md="12">
-    <MudTextField Label="Generated" T="string" Variant="Variant.Text" Text="" Lines="30" ReadOnly="true" />
-</MudItem> *@
-
-<MudText Typo="Typo.h5">File Manipulation</MudText>
-
-        <MudGrid>
-    <MudItem xs="12">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=12</MudPaper>
-    </MudItem>
-    <MudItem xs="12">
-           <MudTextField Label="Original" T="string" Variant="Variant.Text" Text="@AppState.FileContent" Lines="30" ReadOnly="true" />
-    </MudItem>
-    <MudItem xs="12">
-             <MudTextField Label="Generated" T="string" Variant="Variant.Text" Text="" Lines="30" ReadOnly="true"  />
-    </MudItem>
-        </MudGrid>
-
+<MudTable Items="@AppState.TestResult" Hover="true" Breakpoint="Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh><b>Name</b></MudTh>
+        <MudTh><b>Result</b></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Result">@context.Result</MudTd>
+    </RowTemplate>
+</MudTable>
 
 @code {
     protected override void OnInitialized()

@@ -1,0 +1,30 @@
+@page "/shell"
+@inject AppState AppState
+@implements IDisposable
+
+
+    <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true"
+     @bind-Value="@AppState.FileContent" Lines="@lines" OnKeyDown="OnKeyDown"/>
+
+@code {
+
+    int lines = 30;
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += StateHasChanged;
+    }
+
+    void OnKeyDown(KeyboardEventArgs args)
+    {
+      //  AppState.FileContent += args.Key;
+        if(args.Key == "Enter")
+        {
+            lines++;
+        }
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
+    }
+}

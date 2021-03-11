@@ -5,7 +5,8 @@ public class AppState
 {
     public HashSet<JsonObject> JsonObjects { get; set; } = new HashSet<JsonObject>();
 
-    public string FileContent {get;set;}
+    public List<TestResult> TestResult { get; set; } = new List<TestResult>();
+    public string FileContent { get; set; }
 
     public event Action OnChange;
 
@@ -22,6 +23,11 @@ public class AppState
     public void SetContent(string value)
     {
         FileContent = value;
+        NotifyStateChanged();
+    }
+    public void SetResult(List<TestResult> testResult)
+    {
+        TestResult = testResult;
         NotifyStateChanged();
     }
 
