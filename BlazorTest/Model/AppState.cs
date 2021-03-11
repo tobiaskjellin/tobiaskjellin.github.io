@@ -5,6 +5,8 @@ public class AppState
 {
     public HashSet<JsonObject> JsonObjects { get; set; } = new HashSet<JsonObject>();
 
+    public string FileContent {get;set;}
+
     public event Action OnChange;
 
     public void SetProperty(HashSet<JsonObject> value)
@@ -15,6 +17,11 @@ public class AppState
         foreach (var item in JsonObjects)
             item.IsExpanded = false;
 
+        NotifyStateChanged();
+    }
+    public void SetContent(string value)
+    {
+        FileContent = value;
         NotifyStateChanged();
     }
 

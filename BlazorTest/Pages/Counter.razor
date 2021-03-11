@@ -2,10 +2,28 @@
 @inject AppState AppState
 @implements IDisposable
 
-<MudText Typo="Typo.h5">Text Editor</MudText>
+@* <MudText Typo="Typo.h5">File Manipulation</MudText>
 <MudItem xs="12" sm="12" md="12">
-    <MudTextField T="string" Variant="Variant.Text" Text="" Lines="30" />
+    <MudTextField Label="Original" T="string" Variant="Variant.Text" Text="@AppState.FileContent" Lines="30" ReadOnly="true" />
 </MudItem>
+<MudItem xs="12" sm="12" md="12">
+    <MudTextField Label="Generated" T="string" Variant="Variant.Text" Text="" Lines="30" ReadOnly="true" />
+</MudItem> *@
+
+<MudText Typo="Typo.h5">File Manipulation</MudText>
+
+        <MudGrid>
+    <MudItem xs="12">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=12</MudPaper>
+    </MudItem>
+    <MudItem xs="12">
+           <MudTextField Label="Original" T="string" Variant="Variant.Text" Text="@AppState.FileContent" Lines="30" ReadOnly="true" />
+    </MudItem>
+    <MudItem xs="12">
+             <MudTextField Label="Generated" T="string" Variant="Variant.Text" Text="" Lines="30" ReadOnly="true"  />
+    </MudItem>
+        </MudGrid>
+
 
 @code {
     protected override void OnInitialized()

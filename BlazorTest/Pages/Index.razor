@@ -54,9 +54,9 @@
     {
         IBrowserFile jsonFile = e.File;
         var buffers = new byte[jsonFile.Size];
-        await jsonFile.OpenReadStream().ReadAsync(buffers);
+        await jsonFile.OpenReadStream(5120000).ReadAsync(buffers);
         string fileContent = Encoding.UTF8.GetString(buffers);
-
+        AppState.SetContent(fileContent);
         HashSet<JsonObject> JsonList = new HashSet<JsonObject>();
 
         using (JsonDocument doc = JsonDocument.Parse(fileContent))
