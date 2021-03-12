@@ -109,6 +109,10 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     },
     {
+      "hash": "sha256-+\/IJo9wLK9sTvL8ee9W9w8S1Gkj8rsf\/6yob0uUFAaM=",
+      "url": "_framework\/Blazored.LocalStorage.dll"
+    },
+    {
       "hash": "sha256-lgssfgQvYfQx07d676XX8uqlFLlbvmOCah79daEm3SY=",
       "url": "_framework\/Microsoft.AspNetCore.Components.dll"
     },
@@ -141,7 +145,7 @@
       "url": "_framework\/Microsoft.Extensions.DependencyInjection.dll"
     },
     {
-      "hash": "sha256-n1zKnbbBEbCqI4JCoWrW8cMUVRxm0zi9eZ+8FGaDGiU=",
+      "hash": "sha256-hjZ8Yco2cmKZPRcNb1Ax5NLvTflOPxp4PUyf9cciVvA=",
       "url": "_framework\/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
     },
     {
@@ -177,7 +181,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-B1Al5XhSuI+TT+S3sMcZmi5v0bfXwknn+IqiTT6taHY=",
+      "hash": "sha256-TlFvCKIw1IC0auJ30Z1nrpqAF5JkHP1uc86Yq1McTdk=",
       "url": "_framework\/BlazorTest.dll"
     },
     {
@@ -269,19 +273,19 @@
       "url": "_framework\/System.Text.Encodings.Web.dll"
     },
     {
-      "hash": "sha256-ssFZbR9ID5jQlWM3BVlncfzaWbJ2qzpci9olHUr\/WMk=",
+      "hash": "sha256-pkJnO5nh2G21Z+Bq\/PYEEZrWqZt582911gvvj5dy82I=",
       "url": "_framework\/System.Text.Json.dll"
     },
     {
-      "hash": "sha256-XkVoCP\/RadDs7nurHpdvbeADXfrwJKQ8\/G\/m5rSmulU=",
+      "hash": "sha256-ckJTOvvAQO9RbWFhEN1mvZfJFCJkPqmD80ENW8vYA6g=",
       "url": "_framework\/System.Text.RegularExpressions.dll"
     },
     {
-      "hash": "sha256-1osOX9lEM4U2WR97cVFb\/Yu\/LX7dg2fWoHocle6fxKo=",
+      "hash": "sha256-NZj7oKRN9B8PrUtW5YnSbyPyiE71tYRf4UWcYtBJMM8=",
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-NoMw3Z7d9s41Bb2os1ROUVTGpA+kiYKPjF9UCbmA6OU=",
+      "hash": "sha256-yFW1mhxEihugpK5\/RPNT0j40TmC8Ktmclar9aNCdK74=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -289,5 +293,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "+5aMhThW"
+  "version": "sJLlLpWn"
 };
