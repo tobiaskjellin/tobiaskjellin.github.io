@@ -2,16 +2,29 @@
 @inject AppState AppState
 @implements IDisposable
 
-<MudTable Items="@AppState.TestResult" Hover="true" Breakpoint="Breakpoint.Sm">
-    <HeaderContent>
-        <MudTh><b>Name</b></MudTh>
-        <MudTh><b>Result</b></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Result">@context.Result</MudTd>
-    </RowTemplate>
-</MudTable>
+<MudExpansionPanels>
+    <MudExpansionPanel Text="Monday" >
+     <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" Lines="10"></MudTextField>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Tuesday" >
+       <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" Lines="10"></MudTextField>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Wednesday">
+      <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" Lines="10"></MudTextField>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Thursday">
+       <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" Lines="10"></MudTextField>
+    </MudExpansionPanel>
+       <MudExpansionPanel Text="Friday">
+       <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" Lines="10"></MudTextField>
+    </MudExpansionPanel>
+       <MudExpansionPanel Text="Saturday">
+       <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" Lines="10"></MudTextField>
+    </MudExpansionPanel>
+       <MudExpansionPanel Text="Sunday">
+      <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" Lines="10"></MudTextField>
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
 @code {
     protected override void OnInitialized()

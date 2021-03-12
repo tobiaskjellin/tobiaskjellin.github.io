@@ -18,21 +18,16 @@
         cursor: pointer;
         z-index: 2;
     }
+
 </style>
 <MudText Typo="Typo.h5">Json Viewer</MudText>
-<MudPaper Outlined="true" Height="200px" @ondragenter="@(()=>_dragEnterStyle="drag-enter")"
-    @ondragleave="@(()=>_dragEnterStyle=null)" @ondragend="@(()=>_dragEnterStyle=null)" Class=@("drag-drop-zone "+
-    _dragEnterStyle)>
+<MudPaper Outlined="true" Height="200px" @ondragenter="@(()=>_dragEnterStyle="drag-enter")" @ondragleave="@(()=>_dragEnterStyle=null)"
+    @ondragend="@(()=>_dragEnterStyle=null)" Class=@("drag-drop-zone "+ _dragEnterStyle)>
     <MudText Typo="Typo.body1">Drag and drop files here or click</MudText>
     <InputFile OnChange="OnInputFileChanged" class="drag-drop-input" />
 </MudPaper>
 
-<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-    <MudTabPanel Text="Test Report">
-        <MudText>Content One</MudText>
-    </MudTabPanel>
-    <MudTabPanel Text="Raw Data">
-       <MudTreeView Items="@AppState.JsonObjects" MaxHeight="100%" Width="100%">
+<MudTreeView Items="@AppState.JsonObjects" MaxHeight="100%" Width="100%">
     <ItemTemplate>
         <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.Children">
             <Content>
@@ -42,8 +37,6 @@
         </MudTreeViewItem>
     </ItemTemplate>
 </MudTreeView>
-    </MudTabPanel>
-</MudTabs>
 
 @code {
     protected override void OnInitialized()
@@ -63,51 +56,14 @@
         var buffers = new byte[jsonFile.Size];
         await jsonFile.OpenReadStream(5120000).ReadAsync(buffers);
         string fileContent = Encoding.UTF8.GetString(buffers);
-        AppState.SetContent(fileContent);
+
         HashSet<JsonObject> JsonList = new HashSet<JsonObject>();
 
-        List<TestResult> list = new List<TestResult>();
         using (JsonDocument doc = JsonDocument.Parse(fileContent))
         {
             JsonObject.IterateJsonDocument(JsonList, null, doc.RootElement, jsonFile.Name);
         }
 
-        JsonObject bbb = null;
-        foreach (JsonObject a in JsonList)
-        {
-            bbb = a;
-        }
-        Hej(list, bbb);
-        AppState.SetResult(list);
         AppState.SetProperty(JsonList);
-    }
-
-    private void Hej(List<TestResult> tests, JsonObject jobject)
-    {
-        Console.WriteLine(jobject.Name);
-        if (jobject.Name.Contains("TestingScope"))
-        {
-            foreach (var item in jobject.Children)
-            {
-                var qq = new TestResult();
-                int i = 0;
-                foreach (var item2 in item.Children)
-                {
-                    if (i == 0)
-                        qq.Name = item2.Value;
-                    else
-                        qq.Result = item2.Value;
-                    i++;
-                }
-                tests.Add(qq);
-            }
-        }
-        else
-        {
-            foreach (var item in jobject.Children)
-            {
-                Hej(tests, item);
-            }
-        }
     }
 }

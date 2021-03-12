@@ -3,8 +3,8 @@
 @implements IDisposable
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true"
-    @bind-Value="@content" Lines="@lines" OnKeyDown="OnKeyDown" />
+<MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true" @bind-Value="@content"
+    Lines="@lines" OnKeyDown="OnKeyDown" />
 
 @code {
     int lines = 30;
@@ -14,7 +14,8 @@
     {
         AppState.OnChange += StateHasChanged;
         var name = await localStorage.GetItemAsync<string>("content");
-        content = name;
+        if (name != null)
+            content = name;
     }
 
     void OnKeyDown(KeyboardEventArgs args)

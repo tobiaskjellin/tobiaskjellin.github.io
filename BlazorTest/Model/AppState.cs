@@ -20,11 +20,6 @@ public class AppState
 
         NotifyStateChanged();
     }
-    public void SetContent(string value)
-    {
-        FileContent = value;
-        NotifyStateChanged();
-    }
     public void SetResult(List<TestResult> testResult)
     {
         TestResult = testResult;
