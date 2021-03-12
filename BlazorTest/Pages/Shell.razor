@@ -1,23 +1,26 @@
 @page "/shell"
 @inject AppState AppState
 @implements IDisposable
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-
-    <MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true"
-     @bind-Value="@AppState.FileContent" Lines="@lines" OnKeyDown="OnKeyDown"/>
+<MudTextField T="string" DisableUnderLine="true" Variant="Variant.Text" FullWidth="true"
+    @bind-Value="@content" Lines="@lines" OnKeyDown="OnKeyDown" />
 
 @code {
-
     int lines = 30;
-    protected override void OnInitialized()
+    string content = "";
+
+    protected override async Task OnInitializedAsync()
     {
         AppState.OnChange += StateHasChanged;
+        var name = await localStorage.GetItemAsync<string>("content");
+        content = name;
     }
 
     void OnKeyDown(KeyboardEventArgs args)
     {
-      //  AppState.FileContent += args.Key;
-        if(args.Key == "Enter")
+        // AppState.FileContent += args.Key;
+        if (args.Key == "Enter")
         {
             lines++;
         }
@@ -25,6 +28,7 @@
 
     public void Dispose()
     {
+        localStorage.SetItemAsync("content", content);
         AppState.OnChange -= StateHasChanged;
     }
 }

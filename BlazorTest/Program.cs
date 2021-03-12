@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Timers;
 using System.Text.Json;
 using MudBlazor.Services;
+using Blazored.LocalStorage;
 
 namespace BlazorTest
 {
@@ -23,6 +24,7 @@ namespace BlazorTest
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddSingleton<AppState>();
             builder.Services.AddMudServices();
+            builder.Services.AddBlazoredLocalStorage();
             
             await builder.Build().RunAsync();
         }
